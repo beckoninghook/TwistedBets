@@ -13,6 +13,6 @@ interface MatchApiService {
     suspend fun getMatches(@Path("encryptedAccountId") encryptedAccountId: String?, @QueryMap filter: HashMap<String, String>): MatchList
 
     @GET("/lol/match/v4/matches/{matchId}" )
-    suspend fun getMatch(@Path("matchId") matchId: BigInteger?, @QueryMap filter: HashMap<String, String>): Match
+    suspend fun getMatch(@Path("matchId") matchId: Long?, @QueryMap filter: HashMap<String, String>): Match
 
 }

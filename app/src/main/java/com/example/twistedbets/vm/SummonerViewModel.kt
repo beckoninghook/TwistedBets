@@ -36,8 +36,9 @@ class SummonerViewModel (application: Application) : AndroidViewModel(applicatio
                 summonerRepository.getSummonerFromName(name)
             } catch (error: SummonerRepository.SummonerRefreshError) {
                 _errorText.value = error.message
-                Log.e("Movie error", error.cause.toString())
+                Log.e("Summoner error", error.cause.toString())
             }
         }
     }
+
 }

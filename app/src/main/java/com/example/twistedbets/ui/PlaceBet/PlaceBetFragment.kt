@@ -11,13 +11,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.example.twistedbets.R
+import com.example.twistedbets.models.Summoner
+import com.example.twistedbets.models.match.Match
+import com.example.twistedbets.models.match.MatchListItem
+import com.example.twistedbets.repository.SummonerRepository
+import com.example.twistedbets.vm.MatchViewModel
 import com.example.twistedbets.vm.SummonerViewModel
+import kotlinx.android.synthetic.main.fragment_place_bets.*
 
 class PlaceBetFragment : Fragment() {
 
     private lateinit var placeBetViewModel: PlaceBetViewModel
-    private val viewModel: SummonerViewModel by viewModels()
+    private val summonerViewModel: SummonerViewModel by viewModels()
+    private val matchViewModel: MatchViewModel by viewModels()
+
+
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -52,8 +63,45 @@ class PlaceBetFragment : Fragment() {
 
 
         view.findViewById<Button>(R.id.btnFind).setOnClickListener {
-            viewModel.getSummonerByName("beckoninghook")
+
+
+                summonerViewModel.getSummonerByName(inputSummonersName.text.toString())
+            summonerViewModel.summoner.observe(viewLifecycleOwner, Observer {
+                println(it)
+
+            })
+
+//                findNavController().navigate(R.id.action_navigation_dashboard_to_select_bet)
+
+
+            ObserveMatchList()
+            ObserveMatch()
+
         }
 
     }
+
+
+
+    fun getMatches(id : String){
+        matchViewModel.getMatchListFromEncryptedAccountId(id)
+    }
+
+    fun ObserveMatchList(){
+        matchViewModel.matches.observe(viewLifecycleOwner, Observer {
+            getMatch(it[0].gameId)
+        })
+    }
+
+    fun getMatch(id : Long){
+        matchViewModel.getMatchFromMatchId(id)
+    }
+
+    fun ObserveMatch(){
+        matchViewModel.match.observe(viewLifecycleOwner, Observer {
+            println("blue team had first tower : " + it.teams[1].firstTower)
+        })
+    }
+
+
 }

@@ -2,6 +2,8 @@ package com.example.twistedbets.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.twistedbets.BuildConfig
+
 import com.example.twistedbets.api.MatchApi
 import com.example.twistedbets.api.MatchApiService
 import com.example.twistedbets.api.SummonerApi
@@ -35,7 +37,7 @@ class MatchRepository {
             //timeout the request after 5 seconds
             val result = withTimeout(10_000) {
                 val filter = HashMap<String , String>()
-                filter["api_key"] = "RGAPI-4066c02e-a549-4f11-bd94-d23975e82d94"
+                filter["api_key"] = BuildConfig.ApiKey
 
                 matchApiService.getMatches(encryptedAccountId , filter)
             }
@@ -46,12 +48,12 @@ class MatchRepository {
         }
     }
 
-    suspend fun getMatchFromMatchId(matchId  : BigInteger){
+    suspend fun getMatchFromMatchId(matchId  : Long){
         try {
             //timeout the request after 5 seconds
             val result = withTimeout(10_000) {
                 val filter = HashMap<String , String>()
-                filter["api_key"] = "RGAPI-4066c02e-a549-4f11-bd94-d23975e82d94"
+               filter["api_key"] = BuildConfig.ApiKey
 
                 matchApiService.getMatch(matchId , filter)
             }

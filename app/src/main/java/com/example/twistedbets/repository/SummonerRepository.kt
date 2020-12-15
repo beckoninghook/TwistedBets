@@ -2,6 +2,7 @@ package com.example.twistedbets.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.twistedbets.BuildConfig
 import com.example.twistedbets.api.SummonerApi
 import com.example.twistedbets.api.SummonerApiService
 import com.example.twistedbets.models.Summoner
@@ -29,7 +30,7 @@ class SummonerRepository {
             //timeout the request after 5 seconds
             val result = withTimeout(10_000) {
                 val filter = HashMap<String , String>()
-                filter["api_key"] = "RGAPI-4066c02e-a549-4f11-bd94-d23975e82d94"
+                filter["api_key"] = BuildConfig.ApiKey
 
                 summonerApiService.getSummoner(summonerName , filter)
             }
