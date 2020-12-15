@@ -34,6 +34,7 @@ class SummonerViewModel (application: Application) : AndroidViewModel(applicatio
                 //our own trivia LiveData property points to te one in that repository
                 //timeout the request after 5 seconds
                 summonerRepository.getSummonerFromName(name)
+                Log.i("Summoner Available" , name )
             } catch (error: SummonerRepository.SummonerRefreshError) {
                 _errorText.value = error.message
                 Log.e("Summoner error", error.cause.toString())

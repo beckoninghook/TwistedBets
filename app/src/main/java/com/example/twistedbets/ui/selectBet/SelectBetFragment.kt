@@ -4,25 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.twistedbets.R
 import com.example.twistedbets.adapter.SelectBetScreenAdapter
 import com.example.twistedbets.models.BetPresets
-import com.example.twistedbets.ui.PlaceBet.PlaceBetViewModel
-import kotlinx.android.synthetic.main.fragment_place_bets.*
 import kotlinx.android.synthetic.main.fragment_select_bets.*
+import kotlinx.android.synthetic.main.item_bet_select.*
 
 class SelectBetFragment : Fragment() {
 
     private val betPresets = BetPresets.BETS
-    private val betScreenAdapter = SelectBetScreenAdapter(betPresets)
+    private val betScreenAdapter = SelectBetScreenAdapter(betPresets , ::onPlusOrMinusClick )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +25,22 @@ class SelectBetFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_select_bets, container, false)
 
+    }
+
+    private fun onPlusOrMinusClick(betPresets: BetPresets , char : Char ) {
+        println(betPresets)
+        println(char)
+        if (char == '+'){
+            betPresets.amount += 1;
+        }
+
+        if (char == '-'){
+            if (betPresets.amount > 0){
+                betPresets.amount -= 1
+            }
+        }
+
+        betScreenAdapter.notifyDataSetChanged();
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

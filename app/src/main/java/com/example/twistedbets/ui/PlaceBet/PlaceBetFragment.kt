@@ -1,6 +1,7 @@
 package com.example.twistedbets.ui.PlaceBet
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.example.twistedbets.models.match.MatchListItem
 import com.example.twistedbets.repository.SummonerRepository
 import com.example.twistedbets.vm.MatchViewModel
 import com.example.twistedbets.vm.SummonerViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_place_bets.*
 
 class PlaceBetFragment : Fragment() {
@@ -67,12 +69,20 @@ class PlaceBetFragment : Fragment() {
 
                 summonerViewModel.getSummonerByName(inputSummonersName.text.toString())
             summonerViewModel.summoner.observe(viewLifecycleOwner, Observer {
-                println(it)
+                Log.i(it.name , inputSummonersName.text.toString() )
 
+                if (it.name == inputSummonersName.text.toString()){
+
+                    findNavController().navigate(R.id.action_navigation_dashboard_to_select_bet)
+                }else {
+                    val snackbar = Snackbar.make(view,
+                        "Cannot find user, Check if the region or name is correct",
+                        Snackbar.LENGTH_SHORT)
+                    snackbar.show()
+                }
             })
 
 //                findNavController().navigate(R.id.action_navigation_dashboard_to_select_bet)
-
 
             ObserveMatchList()
             ObserveMatch()
@@ -81,7 +91,11 @@ class PlaceBetFragment : Fragment() {
 
     }
 
-
+//    private fun getSummonerAcountId() : Summoner {
+////        var summoner
+////
+////        return summoner
+//    }
 
     fun getMatches(id : String){
         matchViewModel.getMatchListFromEncryptedAccountId(id)
