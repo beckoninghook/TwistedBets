@@ -1,4 +1,4 @@
-package com.example.twistedbets.ui.notifications
+package com.example.twistedbets.ui.betBacklog
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

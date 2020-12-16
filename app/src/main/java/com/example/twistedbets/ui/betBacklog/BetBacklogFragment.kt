@@ -1,4 +1,4 @@
-package com.example.twistedbets.ui.notifications
+package com.example.twistedbets.ui.betBacklog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.twistedbets.R
 
-class NotificationsFragment : Fragment() {
+class BetBacklogFragment : Fragment() {
 
     private lateinit var notificationsViewModel: NotificationsViewModel
 

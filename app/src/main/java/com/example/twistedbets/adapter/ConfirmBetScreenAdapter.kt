@@ -1,6 +1,7 @@
 package com.example.twistedbets.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +11,11 @@ import com.example.twistedbets.models.bet.BetPresets
 import kotlinx.android.synthetic.main.item_bet_select.view.*
 import kotlin.reflect.KFunction2
 
-class SelectBetScreenAdapter(private val betPresets: List<BetPresets>, private val onClick: KFunction2<@ParameterName(
+class ConfirmBetScreenAdapter(private val betPresets: List<BetPresets>, private val onClick: KFunction2<@ParameterName(
     name = "betPresets"
 ) BetPresets, @ParameterName(name = "char") Char, Unit>
 ) :
-    RecyclerView.Adapter<SelectBetScreenAdapter.ViewHolder>()  {
+    RecyclerView.Adapter<ConfirmBetScreenAdapter.ViewHolder>()  {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
@@ -24,9 +25,14 @@ class SelectBetScreenAdapter(private val betPresets: List<BetPresets>, private v
 
 
         fun bind(betPresets: BetPresets) {
-            itemView.tvBetTitle.text = betPresets.title
-            itemView.tvBetDesc.text = betPresets.description
-            itemView.tvAmount.text = betPresets.amount.toString()
+
+            if(betPresets.amount != 0){
+                Log.i("amoun" , betPresets.amount.toString())
+                itemView.tvBetTitle.text = betPresets.title
+                itemView.tvBetDesc.text = betPresets.description
+                itemView.tvAmount.text = betPresets.amount.toString()
+            }
+
         }
     }
 

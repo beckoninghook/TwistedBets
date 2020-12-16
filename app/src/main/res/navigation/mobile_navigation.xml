@@ -23,8 +23,8 @@
 
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.twistedbets.ui.notifications.NotificationsFragment"
+        android:id="@+id/bet_backlog"
+        android:name="com.example.twistedbets.ui.betBacklog.BetBacklogFragment"
         android:label="@string/title_bets"
         tools:layout="@layout/fragment_bets" />
 
@@ -32,7 +32,18 @@
         android:id="@+id/select_bets"
         android:name="com.example.twistedbets.ui.selectBet.SelectBetFragment"
         android:label="@string/title_bets"
-        tools:layout="@layout/fragment_select_bets" />
+        tools:layout="@layout/fragment_select_bets" >
+        <action
+            android:id="@+id/action_select_bets_to_confirm_bets"
+            app:destination="@id/confirm_bets" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/confirm_bets"
+        android:name="com.example.twistedbets.ui.confirmBet.ConfirmBetFragment"
+        android:label="@string/title_bets"
+        tools:layout="@layout/fragment_confirm_bet" />
 
 
 

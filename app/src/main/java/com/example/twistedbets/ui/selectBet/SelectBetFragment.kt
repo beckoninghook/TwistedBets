@@ -1,22 +1,37 @@
 package com.example.twistedbets.ui.selectBet
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.twistedbets.R
 import com.example.twistedbets.adapter.SelectBetScreenAdapter
-import com.example.twistedbets.models.BetPresets
+import com.example.twistedbets.models.Summoner
+import com.example.twistedbets.models.bet.BetList
+import com.example.twistedbets.models.bet.BetPresets
+import com.example.twistedbets.ui.PlaceBet.BUNDLE_SUMMONER_KEY
+import com.example.twistedbets.ui.PlaceBet.REQ_SUMMONER_KEY
 import kotlinx.android.synthetic.main.fragment_select_bets.*
-import kotlinx.android.synthetic.main.item_bet_select.*
+import java.io.Serializable
+
+const val REQ_BETS_KEY = "req_bets"
+const val BUNDLE_BETS_KEY = "bundle_bets"
+
 
 class SelectBetFragment : Fragment() {
 
     private val betPresets = BetPresets.BETS
     private val betScreenAdapter = SelectBetScreenAdapter(betPresets , ::onPlusOrMinusClick )
+    private var summoner: Summoner = Summoner()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,7 +42,7 @@ class SelectBetFragment : Fragment() {
 
     }
 
-    private fun onPlusOrMinusClick(betPresets: BetPresets , char : Char ) {
+    private fun onPlusOrMinusClick(betPresets: BetPresets, char : Char ) {
         println(betPresets)
         println(char)
         if (char == '+'){
@@ -43,15 +58,37 @@ class SelectBetFragment : Fragment() {
         betScreenAdapter.notifyDataSetChanged();
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
+
+        view.findViewById<Button>(R.id.btnContinueSelBet).setOnClickListener {
+            val betList = BetList(summoner , betPresets)
+            println(betList)
+            setFragmentResult(REQ_BETS_KEY, bundleOf(Pair(BUNDLE_BETS_KEY, betList )))
+            findNavController().navigate(R.id.action_select_bets_to_confirm_bets)
+        }
+
+        getSummoner()
+
     }
     private fun initViews(){
         rvBetSelector.layoutManager = GridLayoutManager(activity , 1)
         rvBetSelector.adapter = betScreenAdapter
         rvBetSelector.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+
     }
 
+
+    private fun getSummoner() {
+        setFragmentResultListener(REQ_SUMMONER_KEY) { key, bundle ->
+            bundle.getSerializable(BUNDLE_SUMMONER_KEY)?.let {
+                println(it)
+                summoner = it as Summoner
+            } ?: Log.e("SelectBetFragment", "Request triggered, but empty reminder text!")
+        }
+        println(summoner)
+    }
 
 }
