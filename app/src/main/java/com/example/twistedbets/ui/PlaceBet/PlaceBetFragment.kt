@@ -78,6 +78,7 @@ class PlaceBetFragment : Fragment() {
 
                 if (it.name == inputSummonersName.text.toString()){
                     setFragmentResult(REQ_SUMMONER_KEY, bundleOf(Pair(BUNDLE_SUMMONER_KEY, it)))
+
                     findNavController().navigate(R.id.action_navigation_dashboard_to_select_bet)
                 }else {
                     val snackbar = Snackbar.make(view,
@@ -89,8 +90,8 @@ class PlaceBetFragment : Fragment() {
 
 //                findNavController().navigate(R.id.action_navigation_dashboard_to_select_bet)
 
-            ObserveMatchList()
-            ObserveMatch()
+//            ObserveMatchList()
+//            ObserveMatch()
 
         }
 
@@ -118,6 +119,7 @@ class PlaceBetFragment : Fragment() {
 
     fun ObserveMatch(){
         matchViewModel.match.observe(viewLifecycleOwner, Observer {
+            println(it)
             println("blue team had first tower : " + it.teams[1].firstTower)
         })
     }

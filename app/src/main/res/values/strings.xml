@@ -11,6 +11,9 @@
     <string name="place_bet_info">The bets that are placed will be applied on the next game that the player will play.</string>
     <string name="btn_find">Find</string>
     <string name="btn_continue">Continue</string>
+    <string name="btn_confirm">Confirm Bet</string>
+    <string name="selecting_bets_title">Selecting bets for : %1$s</string>
+    <string name="confirming_bets_title">Confirming bets for : %1$s</string>
 
 
 

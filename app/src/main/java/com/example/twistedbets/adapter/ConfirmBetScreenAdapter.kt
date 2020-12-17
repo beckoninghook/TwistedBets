@@ -27,10 +27,11 @@ class ConfirmBetScreenAdapter(private val betPresets: List<BetPresets>, private 
         fun bind(betPresets: BetPresets) {
 
             if(betPresets.amount != 0){
-                Log.i("amoun" , betPresets.amount.toString())
                 itemView.tvBetTitle.text = betPresets.title
                 itemView.tvBetDesc.text = betPresets.description
                 itemView.tvAmount.text = betPresets.amount.toString()
+            }else {
+                itemView.visibility = View.GONE
             }
 
         }

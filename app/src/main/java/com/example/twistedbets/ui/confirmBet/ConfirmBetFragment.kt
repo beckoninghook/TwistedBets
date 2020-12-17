@@ -1,12 +1,18 @@
 package com.example.twistedbets.ui.confirmBet
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.annotation.RequiresApi
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.findNavController
 
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,6 +21,7 @@ import com.example.twistedbets.adapter.ConfirmBetScreenAdapter
 
 import com.example.twistedbets.models.bet.BetList
 import com.example.twistedbets.models.bet.BetPresets
+import com.example.twistedbets.repository.BetListRepository
 import com.example.twistedbets.ui.selectBet.BUNDLE_BETS_KEY
 import com.example.twistedbets.ui.selectBet.REQ_BETS_KEY
 import kotlinx.android.synthetic.main.fragment_confirm_bet.*
@@ -24,7 +31,10 @@ class ConfirmBetFragment : Fragment() {
     //Als de user in dit fragment op confirm klikt gaat het saldo pas omlaag.
     //Kan het ook live doen not sure yet
 
-    private var betPresets = BetPresets.BETS
+    //ALS ER OP CONFIRM WORD GEKLIKT GEBRUIK DE BETLIST REPO OM OP TE SLAAN NAAR LOCAL STORAGE
+
+    private lateinit var betListRepository: BetListRepository
+    private var betPresets = BetPresets.BETS.filter { it.amount != 0 }
     private val confirmBetScreenAdapter = ConfirmBetScreenAdapter(betPresets , ::onPlusOrMinusClick )
     private var betList: BetList? = null
     override fun onCreateView(
@@ -57,13 +67,17 @@ class ConfirmBetFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeAddBetlistResult()
-        deleteNotUsedBets()
         initViews()
+
+        view.findViewById<Button>(R.id.btnConfirm).setOnClickListener {
+            betListRepository.insertBetList(betList!!)
+
+            println(betListRepository.getAllBetLists())
+        }
+
     }
 
-    private fun deleteNotUsedBets(){
-        println(betList)
-    }
+
 
 
     private fun observeAddBetlistResult() {
@@ -72,6 +86,8 @@ class ConfirmBetFragment : Fragment() {
                 betList = it as BetList
                 betPresets = betList!!.selectedBets
 
+                Log.i("player champion" , betList!!.lastMatch?.champion.toString())
+                tvSelectedBetsTitle.text = getString(R.string.selecting_bets_title, betList!!.summoner.name)
                 confirmBetScreenAdapter.notifyDataSetChanged();
             } ?: Log.e("ConfirmBetFragment", "Request triggered, but empty reminder text!")
 
@@ -90,4 +106,5 @@ class ConfirmBetFragment : Fragment() {
 
 
 }
+
 
