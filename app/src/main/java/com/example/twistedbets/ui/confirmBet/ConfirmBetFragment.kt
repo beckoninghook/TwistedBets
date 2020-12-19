@@ -59,22 +59,22 @@ class ConfirmBetFragment : Fragment() {
             }
         }
 
-        confirmBetScreenAdapter.notifyDataSetChanged();
+        confirmBetScreenAdapter.notifyDataSetChanged()
     }
 
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        betListRepository = BetListRepository(requireContext())
         observeAddBetlistResult()
         initViews()
 
         view.findViewById<Button>(R.id.btnConfirm).setOnClickListener {
             betListRepository.insertBetList(betList!!)
-
+            findNavController().navigate(R.id.action_confirm_bets_to_bet_backlog)
             println(betListRepository.getAllBetLists())
         }
-
     }
 
 

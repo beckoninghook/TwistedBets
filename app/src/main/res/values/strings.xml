@@ -16,5 +16,8 @@
     <string name="confirming_bets_title">Confirming bets for : %1$s</string>
 
 
+    <string name="ongoing_bets_title">BetList</string>
+
+
 
 </resources>

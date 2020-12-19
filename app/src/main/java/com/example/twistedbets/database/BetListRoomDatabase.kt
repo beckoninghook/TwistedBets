@@ -5,11 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.twistedbets.converters.BetListConverter
 import com.example.twistedbets.dao.BetListDao
 import com.example.twistedbets.models.bet.BetList
 
 
 @Database(entities = [BetList::class], version = 1, exportSchema = false)
+@TypeConverters(BetListConverter::class)
 abstract class BetListRoomDatabase : RoomDatabase() {
 
     abstract fun betListDao(): BetListDao

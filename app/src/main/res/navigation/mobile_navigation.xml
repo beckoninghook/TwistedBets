@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_dashboard">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -38,13 +38,14 @@
             app:destination="@id/confirm_bets" />
     </fragment>
 
-
     <fragment
         android:id="@+id/confirm_bets"
         android:name="com.example.twistedbets.ui.confirmBet.ConfirmBetFragment"
         android:label="@string/title_bets"
-        tools:layout="@layout/fragment_confirm_bet" />
-
-
+        tools:layout="@layout/fragment_confirm_bet" >
+        <action
+            android:id="@+id/action_confirm_bets_to_bet_backlog"
+            app:destination="@id/bet_backlog" />
+    </fragment>
 
 </navigation>

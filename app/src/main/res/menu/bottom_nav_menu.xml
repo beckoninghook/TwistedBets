@@ -12,7 +12,7 @@
         android:title="@string/title_place_bet" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/bet_backlog"
         android:icon="@drawable/ic_baseline_money_24"
         android:title="@string/title_bets" />
 

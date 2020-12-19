@@ -97,11 +97,6 @@ class PlaceBetFragment : Fragment() {
 
     }
 
-//    private fun getSummonerAcountId() : Summoner {
-////        var summoner
-////
-////        return summoner
-//    }
 
     fun getMatches(id : String){
         matchViewModel.getMatchListFromEncryptedAccountId(id)

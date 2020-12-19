@@ -30,4 +30,5 @@ import com.example.twistedbets.models.bet.BetList
     fun updateBetList(betList: BetList) {
         betListDao.updateBetList(betList)
     }
-}
+
+ }

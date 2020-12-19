@@ -1,5 +1,7 @@
 package com.example.twistedbets.models.bet
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -16,15 +18,17 @@ data class BetList (
     var summoner : Summoner,
 
     @ColumnInfo(name = "selectedBets")
+    @TypeConverters(BetListConverter::class)
     var selectedBets : MutableList<BetPresets>,
 
     @ColumnInfo(name = "lastMatch")
+    @TypeConverters(BetListConverter::class)
     var lastMatch : MatchListItem?,
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var id: Long? = null
-) : Serializable{
-
+) : Serializable {
 
 }
+
