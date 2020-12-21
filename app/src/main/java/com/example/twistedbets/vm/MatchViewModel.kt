@@ -18,6 +18,10 @@ class MatchViewModel   (application: Application) : AndroidViewModel(application
     val matches = matchRepository.matches
     private val _errorText: MutableLiveData<String> = MutableLiveData()
 
+
+
+
+
     /**
      * Expose non MutableLiveData via getter
      * errorText can be observed from view for error showing

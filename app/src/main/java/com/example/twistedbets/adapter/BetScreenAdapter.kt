@@ -8,21 +8,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.twistedbets.R
 import com.example.twistedbets.models.bet.BetList
 import com.example.twistedbets.models.bet.BetPresets
+import kotlinx.android.synthetic.main.item_bet.view.*
 import kotlinx.android.synthetic.main.item_bet_select.view.*
+import kotlinx.android.synthetic.main.item_betlist_parent.view.*
+import kotlinx.android.synthetic.main.item_betlist_parent.view.tvBetListTitle
 import kotlin.reflect.KFunction2
 
-class BetScreenAdapter (private val betPresets: List<BetPresets> , private val onClick: (BetPresets) -> Unit)  :
+class BetScreenAdapter (private val betPresets: List<BetPresets>)   :
     RecyclerView.Adapter<BetScreenAdapter.ViewHolder>()  {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        init {
-            itemView.setOnClickListener { onClick(betPresets[adapterPosition]) }
-        }
+
+
 
         fun bind(betPresets: BetPresets) {
-            itemView.tvBetTitle.text = betPresets.title
-            itemView.tvBetDesc.text = betPresets.description
-            itemView.tvAmount.text = betPresets.amount.toString()
+            itemView.tvBetListTitle.text = betPresets.title
+            itemView.tvBetListDesc.text = betPresets.description
+            itemView.tvBetListAmount.text = betPresets.amount.toString()
         }
     }
 
@@ -32,7 +34,7 @@ class BetScreenAdapter (private val betPresets: List<BetPresets> , private val o
         context = parent.context
 
         return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.item_bet_select, parent, false)
+            LayoutInflater.from(context).inflate(R.layout.item_bet, parent, false)
         )
     }
 
