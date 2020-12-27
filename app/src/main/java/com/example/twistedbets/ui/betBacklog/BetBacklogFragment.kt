@@ -2,29 +2,30 @@ package com.example.twistedbets.ui.betBacklog
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twistedbets.R
 import com.example.twistedbets.adapter.BetlistScreenAdapter
 import com.example.twistedbets.models.bet.BetList
-import com.example.twistedbets.models.bet.BetPresets
 import com.example.twistedbets.models.match.MatchListItem
 import com.example.twistedbets.repository.BetListRepository
 import com.example.twistedbets.vm.MatchViewModel
 import com.example.twistedbets.vm.SummonerViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_bets.*
+import kotlinx.android.synthetic.main.fragment_place_bets.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import java.lang.IndexOutOfBoundsException
+
 
 class BetBacklogFragment : Fragment() {
 
@@ -70,7 +71,11 @@ class BetBacklogFragment : Fragment() {
 
 
     private fun initViews(){
-        rvBets.layoutManager = GridLayoutManager(activity , 1)
+        val mLayoutManager =  LinearLayoutManager(activity )
+        mLayoutManager.reverseLayout = true
+        mLayoutManager.setStackFromEnd(true);
+        rvBets.layoutManager = mLayoutManager
+        rvBets.layoutManager
         rvBets.adapter = betlistScreenAdapter
         rvBets.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
@@ -82,20 +87,37 @@ class BetBacklogFragment : Fragment() {
 
     private fun ObserveMatchList(betList: BetList) {
         matchViewModel.matches.observe(viewLifecycleOwner, Observer {
-            matchListItems = it
-            checkForNewGame(it[0].gameId , betList)
+            checkForNewGame(it[0].gameId , betList , it)
         })
     }
 
-    private fun checkForNewGame(gameId: Long, betList: BetList) {
+    private fun checkForNewGame(gameId: Long, betList: BetList , matchListItemList: List<MatchListItem>) {
         Thread.sleep(1_000)
         println("check for new game: " + gameId.toString() + " vs " + betList.lastMatch?.gameId)
+        val lastMatchId =  betList.lastMatch?.gameId
         if(gameId != betList.lastMatch?.gameId){
             Snackbar.make(rvBets, "${betList.summoner.name} has played a new game", Snackbar.LENGTH_LONG).show()
+            val matchedGame = matchListItemList.find { idOfGame -> idOfGame.gameId == lastMatchId }
+            try {
+                matchViewModel.getMatchFromMatchId(matchListItemList[(matchListItemList.indexOf(matchedGame)- 1 )].gameId)
+                ObserveNewlyPlayedMatch(matchListItemList[(matchListItemList.indexOf(matchedGame)- 1 )].champion)
+            }catch (e : IndexOutOfBoundsException){
+                Log.e("Something went wrong" , e.toString())
+            }
+
         }else {
             Snackbar.make(rvBets, "${betList.summoner.name} needs to play another game", Snackbar.LENGTH_LONG).show()
         }
     }
 
+    private fun ObserveNewlyPlayedMatch(championId : Int){
+        matchViewModel.match.observe(viewLifecycleOwner, Observer {
+            val selectedSummoner = it.participants.find { participant -> participant.championId == championId}
+            if (selectedSummoner != null) {
+                println(selectedSummoner.stats.kills / selectedSummoner.stats.deaths)
 
+                println(selectedSummoner.stats.assists)
+            }
+        })
+    }
 }

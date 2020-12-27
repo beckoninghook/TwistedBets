@@ -97,27 +97,4 @@ class PlaceBetFragment : Fragment() {
 
     }
 
-
-    fun getMatches(id : String){
-        matchViewModel.getMatchListFromEncryptedAccountId(id)
-    }
-
-    fun ObserveMatchList(){
-        matchViewModel.matches.observe(viewLifecycleOwner, Observer {
-            getMatch(it[0].gameId)
-        })
-    }
-
-    fun getMatch(id : Long){
-        matchViewModel.getMatchFromMatchId(id)
-    }
-
-    fun ObserveMatch(){
-        matchViewModel.match.observe(viewLifecycleOwner, Observer {
-            println(it)
-            println("blue team had first tower : " + it.teams[1].firstTower)
-        })
-    }
-
-
 }

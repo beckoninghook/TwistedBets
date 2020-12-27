@@ -5,6 +5,7 @@ import java.math.BigInteger
 
 class ParticipantStats (
     @SerializedName("kills") var kills: Int,
+    @SerializedName("deaths") var deaths: Int,
     @SerializedName("teamId") var teamId: Int,
     @SerializedName("assists") var assists: Int,
     @SerializedName("pentaKills") var pentaKills: Int,

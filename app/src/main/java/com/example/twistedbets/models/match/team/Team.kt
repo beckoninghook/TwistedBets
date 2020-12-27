@@ -15,7 +15,6 @@ data class Team (
     @SerializedName("towerKills") var towerKills: Int,
     @SerializedName("inhibitorKills") var inhibitorKills: Int,
     @SerializedName("baronKills") var baronKills: Int,
-    @SerializedName("dragonKills") var dragonKills: Int,
-    @SerializedName("stats") var stats: List<Participants>
+    @SerializedName("dragonKills") var dragonKills: Int
 ){
 }
