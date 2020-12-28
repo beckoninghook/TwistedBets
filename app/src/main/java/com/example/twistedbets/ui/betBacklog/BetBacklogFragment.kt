@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -15,7 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twistedbets.R
 import com.example.twistedbets.adapter.BetlistScreenAdapter
 import com.example.twistedbets.models.bet.BetList
+import com.example.twistedbets.models.bet.BetPresets
+import com.example.twistedbets.models.bet.BetStatus
+import com.example.twistedbets.models.match.Match
 import com.example.twistedbets.models.match.MatchListItem
+import com.example.twistedbets.models.match.team.Participants
+import com.example.twistedbets.models.match.team.Team
 import com.example.twistedbets.repository.BetListRepository
 import com.example.twistedbets.vm.MatchViewModel
 import com.example.twistedbets.vm.SummonerViewModel
@@ -55,8 +61,10 @@ class BetBacklogFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         betListRepository = BetListRepository(requireContext())
         betLists = betListRepository.getAllBetLists()
-        betlistScreenAdapter = BetlistScreenAdapter(betLists )
+        betlistScreenAdapter = BetlistScreenAdapter(betLists , ::onBetClick )
         initViews()
+
+
 
     }
 
@@ -64,6 +72,7 @@ class BetBacklogFragment : Fragment() {
     private fun onBetClick(betList: BetList) {
         getMatches(betList.summoner.accountId)
         ObserveMatchList(betList)
+
 
     }
 
@@ -77,6 +86,7 @@ class BetBacklogFragment : Fragment() {
         rvBets.layoutManager
         rvBets.adapter = betlistScreenAdapter
         rvBets.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+
     }
 
     fun getMatches(id : String){
@@ -109,14 +119,79 @@ class BetBacklogFragment : Fragment() {
 
     private fun ObserveNewlyPlayedMatch(championId : Int , betList: BetList){
         var playerKD = 0.0
-        matchViewModel.match.observe(viewLifecycleOwner, Observer {
-            val selectedSummoner = it.participants.find { participant -> participant.championId == championId}
+        matchViewModel.match.observe(viewLifecycleOwner, Observer { itMatch ->
+            val selectedSummoner = itMatch.participants.find { participant -> participant.championId == championId}
             if (selectedSummoner != null) {
-                playerKD = selectedSummoner.stats.kills.toDouble() / selectedSummoner.stats.deaths.toDouble()
-                println(selectedSummoner.stats.kills.toDouble())
-                println( selectedSummoner.stats.deaths.toDouble())
-                Snackbar.make(rvBets ,  "player KD is " + String.format("%.2f", playerKD) , Snackbar.LENGTH_SHORT ).show()
+                checkBetWinOrLoss(betList.selectedBets.filter { it.amount != 0 } , itMatch , selectedSummoner)
+                //Snackbar.make(rvBets ,  "player KD is " + String.format("%.2f", playerKD) , Snackbar.LENGTH_SHORT ).show()
             }
         })
+    }
+
+    private fun checkBetWinOrLoss(betPresets: List<BetPresets> , match : Match , selectedSummoner : Participants){
+        var creditsWon = 0;
+        var team : Team? = match.teams.find { id -> id.teamId == selectedSummoner.teamId }
+        for (bets in betPresets ){
+
+            when(bets.id){
+                1 -> if(selectedSummoner.stats.kills.toDouble() / selectedSummoner.stats.deaths.toDouble() >= 1.0){
+                        println("dis BITCH BE WINNING DAWG")
+                        bets.betStatus = BetStatus.WON
+                        creditsWon += ( bets.amount * 2 )
+                    }else {
+                        println("dis lil hombre puta BE losing lil dawg")
+                        bets.betStatus = BetStatus.LOST
+                    }
+                2 -> if(selectedSummoner.stats.kills.toDouble() / selectedSummoner.stats.deaths.toDouble() < 1.0){
+                        bets.betStatus = BetStatus.WON
+                    creditsWon += ( bets.amount  * 2 )
+                }else {
+                        bets.betStatus = BetStatus.LOST
+                    }
+                3 -> if (team != null) {
+                        if (team.baronKills > 0){
+                            bets.betStatus = BetStatus.WON
+                            creditsWon += ( bets.amount  * 2 )
+                        }else {
+                            bets.betStatus = BetStatus.LOST
+                        }
+                }
+                4 -> if (team != null) {
+                    if (team.dragonKills == 5){
+                        bets.betStatus = BetStatus.WON
+                        creditsWon += ( bets.amount  * 2 )
+                    }else {
+                        bets.betStatus = BetStatus.LOST
+                    }
+                }
+                5 -> if (team != null){
+                        if (team.firstTower){
+                            bets.betStatus = BetStatus.WON
+                            creditsWon += ( bets.amount  * 2 )
+                        }else {
+                            bets.betStatus = BetStatus.LOST
+                        }
+                    }
+                6 -> if(selectedSummoner.stats.win){
+                        bets.betStatus = BetStatus.WON
+                        creditsWon += ( bets.amount  * 2 )
+                    }else {
+                        bets.betStatus = BetStatus.LOST
+                    }
+                7 -> if(!selectedSummoner.stats.win){
+                        bets.betStatus = BetStatus.WON
+                        creditsWon += ( bets.amount  * 2 )
+                    }else {
+                        bets.betStatus = BetStatus.LOST
+                    }
+                8 -> println("implement : This player will have placed the most wards of everyone in the game.")
+                9 -> println("implement : This player will have placed the most wards of everyone in the game.")
+                10 -> println("implement : This player will have placed the most wards of everyone in the game.")
+                11 -> println("implement : This player will have placed the most wards of everyone in the game.")
+                12 -> println("implement : This player will have placed the most wards of everyone in the game.")
+            }
+        }
+
+        println("This player has won $creditsWon")
     }
 }

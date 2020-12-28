@@ -18,6 +18,7 @@ class BetScreenAdapter (private val betPresets: List<BetPresets> , private val o
     RecyclerView.Adapter<BetScreenAdapter.ViewHolder>()  {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        //CHILD
         init {
             itemView.setOnClickListener { onClick(betPresets[adapterPosition]) }
         }

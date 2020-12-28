@@ -4,7 +4,8 @@ data class BetPresets(
     val id : Int,
     val title : String,
     val description : String,
-    var amount : Int = 0
+    var amount : Int = 0,
+    var betStatus: BetStatus = BetStatus.UNRESOLVED
 
 
 ) {
@@ -28,12 +29,12 @@ data class BetPresets(
             BetPresets(
                 4,
                 "Objectives",
-                "This player's team will have defeated the most dragons"
+                "This player's team will have defeated 5 dragons"
             ),
             BetPresets(
                 5,
-                "Vision",
-                "This player will have placed the most wards of everyone in the game."
+                "Objectives",
+                "This player's team will have the first tower."
             ),
             BetPresets(
                 6,
@@ -48,28 +49,33 @@ data class BetPresets(
 
             BetPresets(
                 8,
-                "empty",
-                "lorem ipsumlorem ipsumlorem ipsumlorem ipsum lorem ipsum"
+                "Farm",
+                "This player will get a total minion kill count above 150"
             ),
-            BetPresets(8,
-                "empty",
-                "lorem ipsumlorem ipsumlorem ipsumlorem ipsum lorem ipsum"
+            BetPresets(
+                9,
+                "Vision",
+                "This player will place more than 5 wards"
             ),
-            BetPresets(8,
-                "empty",
-                "lorem ipsumlorem ipsumlorem ipsumlorem ipsum lorem ipsum"
+            BetPresets(
+                10,
+                "Combos",
+                "This player will get a double kill"
             ),
-            BetPresets(8,
-                "empty",
-                "lorem ipsumlorem ipsumlorem ipsumlorem ipsum lorem ipsum"
+            BetPresets(
+                11,
+                "Combos",
+                "This player will get a triple kill"
             ),
-            BetPresets(8,
-                "empty",
-                "lorem ipsumlorem ipsumlorem ipsumlorem ipsum lorem ipsum"
+            BetPresets(
+                12,
+                "Combos",
+                "This player will get a quadra kill"
             ),
-            BetPresets(8,
-                "empty",
-                "lorem ipsumlorem ipsumlorem ipsumlorem ipsum lorem ipsum"
+            BetPresets(
+                13,
+                "Combos",
+                "This player will get a penta kill"
             )
 
         )

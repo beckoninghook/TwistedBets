@@ -13,11 +13,18 @@ import kotlinx.android.synthetic.main.item_betlist_parent.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BetlistScreenAdapter (private val betLists : List<BetList>  )  :
+class BetlistScreenAdapter (private val betLists : List<BetList> , private val onClick: (BetList) -> Unit)  :
     RecyclerView.Adapter<BetlistScreenAdapter.ViewHolder>()  {
-
+    //PARENT
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         lateinit var betScreenAdapter : BetScreenAdapter
+
+        init {
+            itemView.btnRetrieveCredits.setOnClickListener { onClick(betLists[adapterPosition]) }
+        }
+
+
 
         fun bind(betLists: BetList) {
             itemView.tvBetListTitle.text = betLists.summoner.name

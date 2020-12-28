@@ -9,7 +9,10 @@ class ParticipantStats (
     @SerializedName("teamId") var teamId: Int,
     @SerializedName("assists") var assists: Int,
     @SerializedName("pentaKills") var pentaKills: Int,
-    @SerializedName("quadraKills") var quadraKills: Int
+    @SerializedName("quadraKills") var quadraKills: Int,
+    @SerializedName("win") var win: Boolean,
+    @SerializedName("visionScore") var visionScore : Int
+
 ){
 
 }
