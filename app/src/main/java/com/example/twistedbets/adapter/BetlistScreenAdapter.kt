@@ -8,25 +8,24 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.twistedbets.R
 import com.example.twistedbets.models.bet.BetList
+import com.example.twistedbets.models.bet.BetPresets
 import kotlinx.android.synthetic.main.item_betlist_parent.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BetlistScreenAdapter (private val betLists : List<BetList>   , private val onClick: (BetList) -> Unit)  :
+class BetlistScreenAdapter (private val betLists : List<BetList>  )  :
     RecyclerView.Adapter<BetlistScreenAdapter.ViewHolder>()  {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         lateinit var betScreenAdapter : BetScreenAdapter
-        init {
-            itemView.setOnClickListener { onClick(betLists[adapterPosition]) }
-        }
+
         fun bind(betLists: BetList) {
             itemView.tvBetListTitle.text = betLists.summoner.name
             itemView.tvDate.text = getDate(betLists.lastMatch?.timestamp , "yyyy-MM-dd HH:mm:ss")
             val context = itemView.context
             var otherRecyclerview = itemView.findViewById<RecyclerView>(R.id.rvItemBets)
             otherRecyclerview.layoutManager =  GridLayoutManager(context , 1)
-            betScreenAdapter = BetScreenAdapter(betLists.selectedBets.filter { it.amount != 0 })
+            betScreenAdapter = BetScreenAdapter(betLists.selectedBets.filter { it.amount != 0 } , ::ClickOnBet)
             otherRecyclerview.adapter = betScreenAdapter
         }
     }
@@ -61,5 +60,8 @@ class BetlistScreenAdapter (private val betLists : List<BetList>   , private val
             calendar.timeInMillis = milliSeconds
         }
         return formatter.format(calendar.time)
+    }
+    fun ClickOnBet(betPresets: BetPresets){
+        println(betPresets)
     }
 }

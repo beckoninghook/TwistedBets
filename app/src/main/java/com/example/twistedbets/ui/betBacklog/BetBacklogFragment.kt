@@ -55,8 +55,7 @@ class BetBacklogFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         betListRepository = BetListRepository(requireContext())
         betLists = betListRepository.getAllBetLists()
-        betlistScreenAdapter = BetlistScreenAdapter(betLists , ::onBetClick )
-
+        betlistScreenAdapter = BetlistScreenAdapter(betLists )
         initViews()
 
     }
@@ -80,7 +79,6 @@ class BetBacklogFragment : Fragment() {
         rvBets.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
 
-
     fun getMatches(id : String){
         matchViewModel.getMatchListFromEncryptedAccountId(id)
     }
@@ -96,27 +94,28 @@ class BetBacklogFragment : Fragment() {
         println("check for new game: " + gameId.toString() + " vs " + betList.lastMatch?.gameId)
         val lastMatchId =  betList.lastMatch?.gameId
         if(gameId != betList.lastMatch?.gameId){
-            Snackbar.make(rvBets, "${betList.summoner.name} has played a new game", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(rvBets, "${betList.summoner.name} has played a new game", Snackbar.LENGTH_SHORT).show()
             val matchedGame = matchListItemList.find { idOfGame -> idOfGame.gameId == lastMatchId }
             try {
                 matchViewModel.getMatchFromMatchId(matchListItemList[(matchListItemList.indexOf(matchedGame)- 1 )].gameId)
-                ObserveNewlyPlayedMatch(matchListItemList[(matchListItemList.indexOf(matchedGame)- 1 )].champion)
+                ObserveNewlyPlayedMatch(matchListItemList[(matchListItemList.indexOf(matchedGame)- 1 )].champion  , betList)
             }catch (e : IndexOutOfBoundsException){
                 Log.e("Something went wrong" , e.toString())
             }
-
         }else {
             Snackbar.make(rvBets, "${betList.summoner.name} needs to play another game", Snackbar.LENGTH_LONG).show()
         }
     }
 
-    private fun ObserveNewlyPlayedMatch(championId : Int){
+    private fun ObserveNewlyPlayedMatch(championId : Int , betList: BetList){
+        var playerKD = 0.0
         matchViewModel.match.observe(viewLifecycleOwner, Observer {
             val selectedSummoner = it.participants.find { participant -> participant.championId == championId}
             if (selectedSummoner != null) {
-                println(selectedSummoner.stats.kills / selectedSummoner.stats.deaths)
-
-                println(selectedSummoner.stats.assists)
+                playerKD = selectedSummoner.stats.kills.toDouble() / selectedSummoner.stats.deaths.toDouble()
+                println(selectedSummoner.stats.kills.toDouble())
+                println( selectedSummoner.stats.deaths.toDouble())
+                Snackbar.make(rvBets ,  "player KD is " + String.format("%.2f", playerKD) , Snackbar.LENGTH_SHORT ).show()
             }
         })
     }

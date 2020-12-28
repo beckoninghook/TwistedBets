@@ -14,12 +14,13 @@ import kotlinx.android.synthetic.main.item_betlist_parent.view.*
 import kotlinx.android.synthetic.main.item_betlist_parent.view.tvBetListTitle
 import kotlin.reflect.KFunction2
 
-class BetScreenAdapter (private val betPresets: List<BetPresets>)   :
+class BetScreenAdapter (private val betPresets: List<BetPresets> , private val onClick: (BetPresets) -> Unit)   :
     RecyclerView.Adapter<BetScreenAdapter.ViewHolder>()  {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-
+        init {
+            itemView.setOnClickListener { onClick(betPresets[adapterPosition]) }
+        }
 
         fun bind(betPresets: BetPresets) {
             itemView.tvBetListTitle.text = betPresets.title
