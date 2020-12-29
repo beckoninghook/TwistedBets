@@ -27,6 +27,7 @@ class BetScreenAdapter (private val betPresets: List<BetPresets> , private val o
             itemView.tvBetListTitle.text = betPresets.title
             itemView.tvBetListDesc.text = betPresets.description
             itemView.tvBetListAmount.text = betPresets.amount.toString()
+
         }
     }
 

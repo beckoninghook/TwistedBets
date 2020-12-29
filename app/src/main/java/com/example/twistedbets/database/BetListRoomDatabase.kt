@@ -18,7 +18,7 @@ abstract class BetListRoomDatabase : RoomDatabase() {
     abstract fun betListDao(): BetListDao
 
     companion object {
-        private const val DATABASE_NAME = "BETLIST_DATABASE"
+        private const val DATABASE_NAME = "BETLIST_DB"
 
         @Volatile
         private var betListRoomDatabaseInstance: BetListRoomDatabase? = null

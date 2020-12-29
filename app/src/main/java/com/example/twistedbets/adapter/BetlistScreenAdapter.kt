@@ -1,6 +1,7 @@
 package com.example.twistedbets.adapter
 
 import android.content.Context
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,15 @@ class BetlistScreenAdapter (private val betLists : List<BetList> , private val o
             otherRecyclerview.layoutManager =  GridLayoutManager(context , 1)
             betScreenAdapter = BetScreenAdapter(betLists.selectedBets.filter { it.amount != 0 } , ::ClickOnBet)
             otherRecyclerview.adapter = betScreenAdapter
+
+            if (betLists.isBetResolved){
+                println("bet is resolved greetings from the adapter " +  betLists.wonCredits)
+                itemView.btnRetrieveCredits.text = context.resources.getString(R.string.Retrieve_credits ,
+                    betLists.wonCredits?.toFloat()
+                )
+            }else {
+                itemView.btnRetrieveCredits.text = context.resources.getString(R.string.check_bet_button)
+            }
         }
     }
 

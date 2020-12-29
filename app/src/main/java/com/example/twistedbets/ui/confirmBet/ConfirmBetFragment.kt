@@ -99,7 +99,6 @@ class ConfirmBetFragment : Fragment() {
         rvSelectedBets.layoutManager = GridLayoutManager(activity , 1)
         rvSelectedBets.adapter = confirmBetScreenAdapter
         rvSelectedBets.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-
     }
 
 

@@ -88,10 +88,7 @@ class PlaceBetFragment : Fragment() {
                 }
             })
 
-//                findNavController().navigate(R.id.action_navigation_dashboard_to_select_bet)
 
-//            ObserveMatchList()
-//            ObserveMatch()
 
         }
 

@@ -15,6 +15,9 @@
     <string name="selecting_bets_title">Selecting bets for : %1$s</string>
     <string name="confirming_bets_title">Confirming bets for : %1$s</string>
 
+    <string name="check_bet_button">Check Bet</string>
+    <string name="Retrieve_credits">Retrieve %.2f credits</string>
+
 
     <string name="ongoing_bets_title">Placed Bets</string>
 

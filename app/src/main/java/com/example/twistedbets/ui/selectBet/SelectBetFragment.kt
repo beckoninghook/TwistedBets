@@ -21,13 +21,11 @@ import com.example.twistedbets.adapter.SelectBetScreenAdapter
 import com.example.twistedbets.models.Summoner
 import com.example.twistedbets.models.bet.BetList
 import com.example.twistedbets.models.bet.BetPresets
-import com.example.twistedbets.models.match.Match
 import com.example.twistedbets.models.match.MatchListItem
 import com.example.twistedbets.ui.PlaceBet.BUNDLE_SUMMONER_KEY
 import com.example.twistedbets.ui.PlaceBet.REQ_SUMMONER_KEY
 import com.example.twistedbets.vm.MatchViewModel
 import kotlinx.android.synthetic.main.fragment_select_bets.*
-import java.io.Serializable
 
 const val REQ_BETS_KEY = "req_bets"
 const val BUNDLE_BETS_KEY = "bundle_bets"
@@ -73,7 +71,7 @@ class SelectBetFragment : Fragment() {
         initViews()
 
         view.findViewById<Button>(R.id.btnContinueSelBet).setOnClickListener {
-            val betList = BetList(summoner , betPresets , lastMatch)
+            val betList = BetList(summoner , betPresets , lastMatch =  lastMatch)
             println(betList)
             setFragmentResult(REQ_BETS_KEY, bundleOf(Pair(BUNDLE_BETS_KEY, betList )))
             findNavController().navigate(R.id.action_select_bets_to_confirm_bets)

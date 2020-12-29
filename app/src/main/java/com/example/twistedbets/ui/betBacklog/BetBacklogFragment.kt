@@ -115,13 +115,12 @@ class BetBacklogFragment : Fragment() {
         matchViewModel.match.observe(viewLifecycleOwner, Observer { itMatch ->
             val selectedSummoner = itMatch.participants.find { participant -> participant.championId == championId}
             if (selectedSummoner != null) {
-                checkBetWinOrLoss(betList.selectedBets.filter { it.amount != 0 } , itMatch , selectedSummoner)
-                //Snackbar.make(rvBets ,  "player KD is " + String.format("%.2f", playerKD) , Snackbar.LENGTH_SHORT ).show()
+                checkBetWinOrLoss(betList.selectedBets.filter { it.amount != 0 } , itMatch , selectedSummoner , betList)
             }
         })
     }
 
-    private fun checkBetWinOrLoss(betPresets: List<BetPresets> , match : Match , selectedSummoner : Participants){
+    private fun checkBetWinOrLoss(betPresets: List<BetPresets> , match : Match , selectedSummoner : Participants , betList: BetList){
         var creditsWon = 0;
         var team : Team? = match.teams.find { id -> id.teamId == selectedSummoner.teamId }
         for (bets in betPresets ){
@@ -216,6 +215,11 @@ class BetBacklogFragment : Fragment() {
             }
         }
 
-        println("This player has won $creditsWon")
+        betList.wonCredits = creditsWon
+        betList.isBetResolved = true
+        Snackbar.make(rvBets, "You won " + creditsWon, Snackbar.LENGTH_LONG).show()
+        betlistScreenAdapter.notifyDataSetChanged()
+
+
     }
 }
