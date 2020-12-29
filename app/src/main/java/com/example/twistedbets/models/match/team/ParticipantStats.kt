@@ -10,8 +10,12 @@ class ParticipantStats (
     @SerializedName("assists") var assists: Int,
     @SerializedName("pentaKills") var pentaKills: Int,
     @SerializedName("quadraKills") var quadraKills: Int,
+    @SerializedName("doubleKills") var doubleKills: Int,
+    @SerializedName("tripleKills") var tripleKills: Int,
     @SerializedName("win") var win: Boolean,
-    @SerializedName("visionScore") var visionScore : Int
+    @SerializedName("visionScore") var visionScore : Int,
+    @SerializedName("totalMinionsKilled") var totalMinionsKilled : Int,
+    @SerializedName("wardsPlaced") var wardsPlaced : Int
 
 ){
 

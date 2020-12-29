@@ -49,9 +49,7 @@ class BetBacklogFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val root = inflater.inflate(R.layout.fragment_bets, container, false)
-
         return root
     }
 
@@ -63,17 +61,12 @@ class BetBacklogFragment : Fragment() {
         betLists = betListRepository.getAllBetLists()
         betlistScreenAdapter = BetlistScreenAdapter(betLists , ::onBetClick )
         initViews()
-
-
-
     }
 
 
     private fun onBetClick(betList: BetList) {
         getMatches(betList.summoner.accountId)
         ObserveMatchList(betList)
-
-
     }
 
 
@@ -137,21 +130,21 @@ class BetBacklogFragment : Fragment() {
                 1 -> if(selectedSummoner.stats.kills.toDouble() / selectedSummoner.stats.deaths.toDouble() >= 1.0){
                         println("dis BITCH BE WINNING DAWG")
                         bets.betStatus = BetStatus.WON
-                        creditsWon += ( bets.amount * 2 )
+                        creditsWon += ( bets.amount * bets.multiplier )
                     }else {
                         println("dis lil hombre puta BE losing lil dawg")
                         bets.betStatus = BetStatus.LOST
                     }
                 2 -> if(selectedSummoner.stats.kills.toDouble() / selectedSummoner.stats.deaths.toDouble() < 1.0){
                         bets.betStatus = BetStatus.WON
-                    creditsWon += ( bets.amount  * 2 )
+                    creditsWon += ( bets.amount  * bets.multiplier )
                 }else {
                         bets.betStatus = BetStatus.LOST
                     }
                 3 -> if (team != null) {
                         if (team.baronKills > 0){
                             bets.betStatus = BetStatus.WON
-                            creditsWon += ( bets.amount  * 2 )
+                            creditsWon += ( bets.amount  * bets.multiplier )
                         }else {
                             bets.betStatus = BetStatus.LOST
                         }
@@ -159,7 +152,7 @@ class BetBacklogFragment : Fragment() {
                 4 -> if (team != null) {
                     if (team.dragonKills == 5){
                         bets.betStatus = BetStatus.WON
-                        creditsWon += ( bets.amount  * 2 )
+                        creditsWon += ( bets.amount  * bets.multiplier )
                     }else {
                         bets.betStatus = BetStatus.LOST
                     }
@@ -167,28 +160,59 @@ class BetBacklogFragment : Fragment() {
                 5 -> if (team != null){
                         if (team.firstTower){
                             bets.betStatus = BetStatus.WON
-                            creditsWon += ( bets.amount  * 2 )
+                            creditsWon += ( bets.amount  * bets.multiplier )
                         }else {
                             bets.betStatus = BetStatus.LOST
                         }
                     }
                 6 -> if(selectedSummoner.stats.win){
                         bets.betStatus = BetStatus.WON
-                        creditsWon += ( bets.amount  * 2 )
+                        creditsWon += ( bets.amount  * bets.multiplier )
                     }else {
                         bets.betStatus = BetStatus.LOST
                     }
                 7 -> if(!selectedSummoner.stats.win){
                         bets.betStatus = BetStatus.WON
-                        creditsWon += ( bets.amount  * 2 )
+                        creditsWon += ( bets.amount  * bets.multiplier )
                     }else {
                         bets.betStatus = BetStatus.LOST
                     }
-                8 -> println("implement : This player will have placed the most wards of everyone in the game.")
-                9 -> println("implement : This player will have placed the most wards of everyone in the game.")
-                10 -> println("implement : This player will have placed the most wards of everyone in the game.")
-                11 -> println("implement : This player will have placed the most wards of everyone in the game.")
-                12 -> println("implement : This player will have placed the most wards of everyone in the game.")
+                8 -> if(selectedSummoner.stats.totalMinionsKilled >= 150){
+                        bets.betStatus = BetStatus.WON
+                        creditsWon += ( bets.amount  * bets.multiplier )
+                    }else {
+                        bets.betStatus = BetStatus.LOST
+                    }
+                9 -> if(selectedSummoner.stats.wardsPlaced >= 5){
+                        bets.betStatus = BetStatus.WON
+                        creditsWon += ( bets.amount  * bets.multiplier )
+                    }else {
+                        bets.betStatus = BetStatus.LOST
+                    }
+                10 ->  if(selectedSummoner.stats.doubleKills >= 1){
+                            bets.betStatus = BetStatus.WON
+                            creditsWon += ( bets.amount  * bets.multiplier )
+                        }else {
+                            bets.betStatus = BetStatus.LOST
+                        }
+                11 ->  if(selectedSummoner.stats.tripleKills >= 1){
+                            bets.betStatus = BetStatus.WON
+                            creditsWon += ( bets.amount  * bets.multiplier )
+                        }else {
+                            bets.betStatus = BetStatus.LOST
+                        }
+                12 ->  if(selectedSummoner.stats.quadraKills >= 1){
+                    bets.betStatus = BetStatus.WON
+                    creditsWon += ( bets.amount  * bets.multiplier )
+                }else {
+                    bets.betStatus = BetStatus.LOST
+                }
+                13 ->  if(selectedSummoner.stats.pentaKills >= 1){
+                    bets.betStatus = BetStatus.WON
+                    creditsWon += ( bets.amount  * bets.multiplier )
+                }else {
+                    bets.betStatus = BetStatus.LOST
+                }
             }
         }
 
