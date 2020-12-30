@@ -31,10 +31,10 @@ class BetlistScreenAdapter (private val betLists : List<BetList> , private val o
             itemView.tvBetListTitle.text = betLists.summoner.name
             itemView.tvDate.text = getDate(betLists.lastMatch?.timestamp , "yyyy-MM-dd HH:mm:ss")
             val context = itemView.context
-            var otherRecyclerview = itemView.findViewById<RecyclerView>(R.id.rvItemBets)
-            otherRecyclerview.layoutManager =  GridLayoutManager(context , 1)
+            var childRecyclerview = itemView.findViewById<RecyclerView>(R.id.rvItemBets)
+            childRecyclerview.layoutManager =  GridLayoutManager(context , 1)
             betScreenAdapter = BetScreenAdapter(betLists.selectedBets.filter { it.amount != 0 } , ::ClickOnBet)
-            otherRecyclerview.adapter = betScreenAdapter
+            childRecyclerview.adapter = betScreenAdapter
 
             if (betLists.isBetResolved){
                 println("bet is resolved greetings from the adapter " +  betLists.wonCredits)
@@ -56,6 +56,8 @@ class BetlistScreenAdapter (private val betLists : List<BetList> , private val o
             LayoutInflater.from(context).inflate(R.layout.item_betlist_parent, parent, false)
         )
     }
+
+
 
     override fun getItemCount(): Int = betLists.size
 

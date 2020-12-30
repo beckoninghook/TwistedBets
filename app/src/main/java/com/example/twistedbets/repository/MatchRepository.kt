@@ -35,7 +35,7 @@ class MatchRepository {
     suspend fun getMatchListFromEncryptedAccountId(encryptedAccountId  : String){
         try {
             //timeout the request after 5 seconds
-            val result = withTimeout(10_000) {
+            val result = withTimeout(20_000) {
                 val filter = HashMap<String , String>()
                 filter["api_key"] = BuildConfig.ApiKey
 
@@ -51,7 +51,7 @@ class MatchRepository {
     suspend fun getMatchFromMatchId(matchId  : Long){
         try {
             //timeout the request after 5 seconds
-            val result = withTimeout(10_000) {
+            val result = withTimeout(20_000) {
                 val filter = HashMap<String , String>()
                filter["api_key"] = BuildConfig.ApiKey
 

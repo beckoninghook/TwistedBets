@@ -19,7 +19,9 @@ import com.example.twistedbets.R
 import com.example.twistedbets.models.Summoner
 import com.example.twistedbets.models.match.Match
 import com.example.twistedbets.models.match.MatchListItem
+import com.example.twistedbets.models.wallet.Wallet
 import com.example.twistedbets.repository.SummonerRepository
+import com.example.twistedbets.repository.WalletRepository
 import com.example.twistedbets.vm.MatchViewModel
 import com.example.twistedbets.vm.SummonerViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -31,7 +33,7 @@ class PlaceBetFragment : Fragment() {
 
     private lateinit var placeBetViewModel: PlaceBetViewModel
     private val summonerViewModel: SummonerViewModel by viewModels()
-    private val matchViewModel: MatchViewModel by viewModels()
+    private lateinit var walletRepository: WalletRepository
 
 
 
@@ -53,9 +55,8 @@ class PlaceBetFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         val spinner: Spinner = view.findViewById(R.id.regionSpinner)
-// Create an ArrayAdapter using the string array and a default spinner layout
+        // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.regions,
@@ -67,7 +68,8 @@ class PlaceBetFragment : Fragment() {
             spinner.adapter = adapter
         }
 
-
+        walletRepository = WalletRepository(requireContext())
+        checkForWallet()
         view.findViewById<Button>(R.id.btnFind).setOnClickListener {
 
 
@@ -92,6 +94,13 @@ class PlaceBetFragment : Fragment() {
 
         }
 
+    }
+
+    private fun checkForWallet(){
+        if (walletRepository.getAllWallets().isEmpty()){
+            val newWallet = Wallet(200)
+            walletRepository.insertWallet(newWallet)
+        }
     }
 
 }

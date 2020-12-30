@@ -22,7 +22,9 @@ import com.example.twistedbets.models.match.Match
 import com.example.twistedbets.models.match.MatchListItem
 import com.example.twistedbets.models.match.team.Participants
 import com.example.twistedbets.models.match.team.Team
+import com.example.twistedbets.models.wallet.Wallet
 import com.example.twistedbets.repository.BetListRepository
+import com.example.twistedbets.repository.WalletRepository
 import com.example.twistedbets.vm.MatchViewModel
 import com.example.twistedbets.vm.SummonerViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -35,14 +37,13 @@ import java.lang.IndexOutOfBoundsException
 
 class BetBacklogFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: NotificationsViewModel
     private lateinit var betListRepository: BetListRepository
-    private lateinit var betLists : List<BetList>
-    private val mainScope =  CoroutineScope(Dispatchers.Main)
-   private lateinit  var betlistScreenAdapter : BetlistScreenAdapter
-    private val summonerViewModel: SummonerViewModel by viewModels()
+    private lateinit var walletRepository: WalletRepository
+    private  var betLists = ArrayList<BetList>()
+    private lateinit var wallet : Wallet
+   private   var betlistScreenAdapter = BetlistScreenAdapter(betLists , ::onBetClick)
     private val matchViewModel: MatchViewModel by viewModels()
-    private lateinit  var matchListItems : List<MatchListItem>
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,10 +58,15 @@ class BetBacklogFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        walletRepository = WalletRepository(requireContext())
         betListRepository = BetListRepository(requireContext())
-        betLists = betListRepository.getAllBetLists()
-        betlistScreenAdapter = BetlistScreenAdapter(betLists , ::onBetClick )
+
+
+
+
         initViews()
+        getBetlistFromDatabase()
     }
 
 
@@ -69,17 +75,27 @@ class BetBacklogFragment : Fragment() {
         ObserveMatchList(betList)
     }
 
+    private fun getBetlistFromDatabase(){
+        val betLists = betListRepository.getAllBetLists() as ArrayList<BetList>
+        this@BetBacklogFragment.betLists.clear()
+        this@BetBacklogFragment.betLists.addAll(betLists)
+        betlistScreenAdapter.notifyDataSetChanged()
+
+    }
 
 
     private fun initViews(){
         val mLayoutManager =  LinearLayoutManager(activity )
         mLayoutManager.reverseLayout = true
         mLayoutManager.setStackFromEnd(true);
+
+
         rvBets.layoutManager = mLayoutManager
         rvBets.layoutManager
         rvBets.adapter = betlistScreenAdapter
         rvBets.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
+        tvCredits.text = walletRepository.getAllWallets()[0].credits.toString()
     }
 
     fun getMatches(id : String){
@@ -111,7 +127,6 @@ class BetBacklogFragment : Fragment() {
     }
 
     private fun ObserveNewlyPlayedMatch(championId : Int , betList: BetList){
-        var playerKD = 0.0
         matchViewModel.match.observe(viewLifecycleOwner, Observer { itMatch ->
             val selectedSummoner = itMatch.participants.find { participant -> participant.championId == championId}
             if (selectedSummoner != null) {
@@ -122,16 +137,14 @@ class BetBacklogFragment : Fragment() {
 
     private fun checkBetWinOrLoss(betPresets: List<BetPresets> , match : Match , selectedSummoner : Participants , betList: BetList){
         var creditsWon = 0;
-        var team : Team? = match.teams.find { id -> id.teamId == selectedSummoner.teamId }
+        val team : Team? = match.teams.find { id -> id.teamId == selectedSummoner.teamId }
         for (bets in betPresets ){
 
             when(bets.id){
                 1 -> if(selectedSummoner.stats.kills.toDouble() / selectedSummoner.stats.deaths.toDouble() >= 1.0){
-                        println("dis BITCH BE WINNING DAWG")
                         bets.betStatus = BetStatus.WON
                         creditsWon += ( bets.amount * bets.multiplier )
                     }else {
-                        println("dis lil hombre puta BE losing lil dawg")
                         bets.betStatus = BetStatus.LOST
                     }
                 2 -> if(selectedSummoner.stats.kills.toDouble() / selectedSummoner.stats.deaths.toDouble() < 1.0){
@@ -215,11 +228,26 @@ class BetBacklogFragment : Fragment() {
             }
         }
 
-        betList.wonCredits = creditsWon
-        betList.isBetResolved = true
-        Snackbar.make(rvBets, "You won " + creditsWon, Snackbar.LENGTH_LONG).show()
-        betlistScreenAdapter.notifyDataSetChanged()
+        if ( !betList.isBetResolved){
+            println("Go off once")
+            betList.wonCredits = creditsWon
+            Snackbar.make(rvBets, "Added " + creditsWon + " to your wallet", Snackbar.LENGTH_LONG).show()
+
+            println(walletRepository.getAllWallets()[0].credits + creditsWon)
+            walletRepository.updateWallet(Wallet(walletRepository.getAllWallets()[0].credits + creditsWon, 1))
+
+            tvCredits.text = walletRepository.getAllWallets()[0].credits.toString()
+             betList.isBetResolved = true
+
+            betListRepository.deleteBetList(betList)
+            getBetlistFromDatabase()
+        }else {
+            println("bet is already resolved")
+
+        }
+
 
 
     }
+
 }
