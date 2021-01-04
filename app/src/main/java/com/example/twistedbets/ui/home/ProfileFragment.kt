@@ -9,9 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.twistedbets.R
+import com.example.twistedbets.repository.WalletRepository
+import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
 
+    private lateinit var walletRepository: WalletRepository
 
 
     override fun onCreateView(
@@ -21,8 +24,18 @@ class ProfileFragment : Fragment() {
     ): View? {
 
         val root = inflater.inflate(R.layout.fragment_profile, container, false)
-
-
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        walletRepository = WalletRepository(requireContext())
+        initViews()
+    }
+
+    private fun initViews(){
+        tvCredits.text = walletRepository.getAllWallets()[0].credits.toString()
+
+
     }
 }

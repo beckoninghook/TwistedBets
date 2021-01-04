@@ -77,7 +77,7 @@ class BetBacklogFragment : Fragment() {
     private fun getBetlistFromDatabase(){
         val betLists = betListRepository.getAllBetLists() as ArrayList<BetList>
         this@BetBacklogFragment.betLists.clear()
-        this@BetBacklogFragment.betLists.addAll(betLists)
+        this@BetBacklogFragment.betLists.addAll(betLists.filter { !it.isBetResolved })
         betlistScreenAdapter.notifyDataSetChanged()
 
     }
@@ -119,7 +119,7 @@ class BetBacklogFragment : Fragment() {
                 Log.e("Something went wrong" , e.toString())
             }
         }else {
-            Snackbar.make(rvBets, "${betList.summoner.name} needs to play another game", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(rvBets, "${betList.summoner.name} did not play another game", Snackbar.LENGTH_LONG).show()
         }
     }
 
@@ -239,7 +239,7 @@ class BetBacklogFragment : Fragment() {
             tvCredits.text = walletRepository.getAllWallets()[0].credits.toString()
              betList.isBetResolved = true
 
-            betListRepository.deleteBetList(betList)
+           // betListRepository.deleteBetList(betList)
             getBetlistFromDatabase()
         }else {
             println("bet is already resolved")
