@@ -27,7 +27,6 @@ public class BetListConverter {
         return Gson().fromJson(jsonSummoner , Summoner::class.java)
     }
 
-
     /**
      * Convert a MatchListItem to a Json
      */

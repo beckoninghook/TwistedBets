@@ -13,16 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.twistedbets.R
-import com.example.twistedbets.models.Summoner
-import com.example.twistedbets.models.match.Match
-import com.example.twistedbets.models.match.MatchListItem
+import com.example.twistedbets.models.bet.BetPresets
 import com.example.twistedbets.models.wallet.Wallet
-import com.example.twistedbets.repository.SummonerRepository
 import com.example.twistedbets.repository.WalletRepository
-import com.example.twistedbets.vm.MatchViewModel
 import com.example.twistedbets.vm.SummonerViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_place_bets.*
@@ -31,7 +26,6 @@ const val BUNDLE_SUMMONER_KEY = "bundle_summoner"
 
 class PlaceBetFragment : Fragment() {
 
-    private lateinit var placeBetViewModel: PlaceBetViewModel
     private val summonerViewModel: SummonerViewModel by viewModels()
     private lateinit var walletRepository: WalletRepository
 
@@ -42,14 +36,7 @@ class PlaceBetFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        placeBetViewModel =
-                ViewModelProviders.of(this).get(PlaceBetViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_place_bets, container, false)
-
-        placeBetViewModel.text.observe(viewLifecycleOwner, Observer {
-
-        })
-        return root
+        return inflater.inflate(R.layout.fragment_place_bets, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,16 +58,16 @@ class PlaceBetFragment : Fragment() {
         walletRepository = WalletRepository(requireContext())
         checkForWallet()
         view.findViewById<Button>(R.id.btnFind).setOnClickListener {
-
-
+            //set all bet amounts on 0 from previous sessions
+            for (bet in BetPresets.BETS){
+                bet.amount = 0
+            }
             summonerViewModel.getSummonerByName(inputSummonersName.text.toString())
             summonerViewModel.summoner.observe(viewLifecycleOwner, Observer {
 
                 Log.i(it.name , inputSummonersName.text.toString() )
-
                 if (it.name == inputSummonersName.text.toString()){
                     setFragmentResult(REQ_SUMMONER_KEY, bundleOf(Pair(BUNDLE_SUMMONER_KEY, it)))
-
                     findNavController().navigate(R.id.action_navigation_dashboard_to_select_bet)
                 }else {
                     val snackbar = Snackbar.make(view,

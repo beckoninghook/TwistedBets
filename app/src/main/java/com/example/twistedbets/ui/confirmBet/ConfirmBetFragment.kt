@@ -21,7 +21,9 @@ import com.example.twistedbets.adapter.ConfirmBetScreenAdapter
 
 import com.example.twistedbets.models.bet.BetList
 import com.example.twistedbets.models.bet.BetPresets
+import com.example.twistedbets.models.wallet.Wallet
 import com.example.twistedbets.repository.BetListRepository
+import com.example.twistedbets.repository.WalletRepository
 import com.example.twistedbets.ui.selectBet.BUNDLE_BETS_KEY
 import com.example.twistedbets.ui.selectBet.REQ_BETS_KEY
 import kotlinx.android.synthetic.main.fragment_confirm_bet.*
@@ -37,6 +39,10 @@ class ConfirmBetFragment : Fragment() {
     private var betPresets = BetPresets.BETS.filter { it.amount != 0 }
     private val confirmBetScreenAdapter = ConfirmBetScreenAdapter(betPresets , ::onPlusOrMinusClick )
     private var betList: BetList? = null
+    private lateinit var walletRepository: WalletRepository
+    private  var creditAmount : Float = 0.0f
+    private var minusTotal = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,15 +53,19 @@ class ConfirmBetFragment : Fragment() {
     }
 
     private fun onPlusOrMinusClick(betPresets: BetPresets, char : Char ) {
-        println(betPresets)
-        println(char)
         if (char == '+'){
             betPresets.amount += 1;
+            minusTotal += 1
+
+            tvNewBalance.text = getString(R.string.new_balance_text , creditAmount  - minusTotal )
         }
 
         if (char == '-'){
             if (betPresets.amount > 0){
                 betPresets.amount -= 1
+                minusTotal -= 1
+
+                tvNewBalance.text = getString(R.string.new_balance_text , creditAmount  - minusTotal )
             }
         }
 
@@ -67,14 +77,12 @@ class ConfirmBetFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         betListRepository = BetListRepository(requireContext())
+        walletRepository = WalletRepository(requireContext())
+        creditAmount = this.walletRepository.getAllWallets()[0].credits.toFloat()
         observeAddBetlistResult()
-        initViews()
+        initViews(view)
 
-        view.findViewById<Button>(R.id.btnConfirm).setOnClickListener {
-            betListRepository.insertBetList(betList!!)
-            findNavController().navigate(R.id.action_confirm_bets_to_bet_backlog)
-            println(betListRepository.getAllBetLists())
-        }
+
     }
 
 
@@ -95,10 +103,28 @@ class ConfirmBetFragment : Fragment() {
     }
 
 
-    private fun initViews(){
+    private fun initViews(view: View){
         rvSelectedBets.layoutManager = GridLayoutManager(activity , 1)
         rvSelectedBets.adapter = confirmBetScreenAdapter
         rvSelectedBets.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+
+        for (bets in betPresets){
+            println(bets.amount)
+            minusTotal += bets.amount
+        }
+
+
+
+        tvNewBalance.text = getString(R.string.new_balance_text , creditAmount  - minusTotal )
+
+        view.findViewById<Button>(R.id.btnConfirm).setOnClickListener {
+            val newCreditVal = creditAmount  - minusTotal
+            walletRepository.updateWallet(Wallet(newCreditVal.toInt() , 1))
+            println(walletRepository.getAllWallets()[0].credits)
+            betListRepository.insertBetList(betList!!)
+            findNavController().navigate(R.id.action_confirm_bets_to_bet_backlog)
+        }
+
     }
 
 

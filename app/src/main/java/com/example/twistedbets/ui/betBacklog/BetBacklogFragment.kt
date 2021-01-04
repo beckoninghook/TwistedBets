@@ -62,15 +62,14 @@ class BetBacklogFragment : Fragment() {
         walletRepository = WalletRepository(requireContext())
         betListRepository = BetListRepository(requireContext())
 
-
-
-
         initViews()
         getBetlistFromDatabase()
     }
 
 
     private fun onBetClick(betList: BetList) {
+
+        Snackbar.make(rvBets, "Checking if ${betList.summoner.name} has played a new game", Snackbar.LENGTH_INDEFINITE).show()
         getMatches(betList.summoner.accountId)
         ObserveMatchList(betList)
     }
@@ -88,7 +87,6 @@ class BetBacklogFragment : Fragment() {
         val mLayoutManager =  LinearLayoutManager(activity )
         mLayoutManager.reverseLayout = true
         mLayoutManager.setStackFromEnd(true);
-
 
         rvBets.layoutManager = mLayoutManager
         rvBets.layoutManager
@@ -110,10 +108,9 @@ class BetBacklogFragment : Fragment() {
 
     private fun checkForNewGame(gameId: Long, betList: BetList , matchListItemList: List<MatchListItem>) {
         Thread.sleep(1_000)
-        println("check for new game: " + gameId.toString() + " vs " + betList.lastMatch?.gameId)
         val lastMatchId =  betList.lastMatch?.gameId
         if(gameId != betList.lastMatch?.gameId){
-            Snackbar.make(rvBets, "${betList.summoner.name} has played a new game", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(rvBets, "Checking game stats of: ${betList.summoner.name}", Snackbar.LENGTH_SHORT).show()
             val matchedGame = matchListItemList.find { idOfGame -> idOfGame.gameId == lastMatchId }
             try {
                 matchViewModel.getMatchFromMatchId(matchListItemList[(matchListItemList.indexOf(matchedGame)- 1 )].gameId)
@@ -229,11 +226,14 @@ class BetBacklogFragment : Fragment() {
         }
 
         if ( !betList.isBetResolved){
-            println("Go off once")
             betList.wonCredits = creditsWon
-            Snackbar.make(rvBets, "Added " + creditsWon + " to your wallet", Snackbar.LENGTH_LONG).show()
 
-            println(walletRepository.getAllWallets()[0].credits + creditsWon)
+            if (creditsWon == 0 ){
+                Snackbar.make(rvBets, "You did not win any credits.", Snackbar.LENGTH_LONG).show()
+            }else {
+                Snackbar.make(rvBets, "Added $creditsWon credits to your wallet.", Snackbar.LENGTH_LONG).show()
+            }
+
             walletRepository.updateWallet(Wallet(walletRepository.getAllWallets()[0].credits + creditsWon, 1))
 
             tvCredits.text = walletRepository.getAllWallets()[0].credits.toString()
@@ -243,11 +243,6 @@ class BetBacklogFragment : Fragment() {
             getBetlistFromDatabase()
         }else {
             println("bet is already resolved")
-
         }
-
-
-
     }
-
 }
