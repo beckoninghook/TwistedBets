@@ -81,8 +81,6 @@ class ConfirmBetFragment : Fragment() {
         creditAmount = this.walletRepository.getAllWallets()[0].credits.toFloat()
         observeAddBetlistResult()
         initViews(view)
-
-
     }
 
 
@@ -109,11 +107,8 @@ class ConfirmBetFragment : Fragment() {
         rvSelectedBets.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
         for (bets in betPresets){
-            println(bets.amount)
             minusTotal += bets.amount
         }
-
-
 
         tvNewBalance.text = getString(R.string.new_balance_text , creditAmount  - minusTotal )
 

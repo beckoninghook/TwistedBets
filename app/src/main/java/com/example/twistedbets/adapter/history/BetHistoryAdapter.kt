@@ -30,7 +30,7 @@ class BetHistoryAdapter (private val betLists : List<BetList>, private val onCli
 
         fun bind(betLists: BetList) {
             itemView.tvHistoryBetListTitle.text = betLists.summoner.name
-            itemView.tvCreditsWon.text = betLists.wonCredits.toString()
+            itemView.tvWonCreditAmount.text = context.getString(R.string.win_amount , betLists.wonCredits.toString())
             val context = itemView.context
             var childRecyclerview = itemView.findViewById<RecyclerView>(R.id.rvItemHistoryBets)
             childRecyclerview.layoutManager =  GridLayoutManager(context , 1)

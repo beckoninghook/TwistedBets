@@ -23,5 +23,6 @@
 
     <string name="player_name">Niels van Oeffel</string>
     <string name="history">Bet History</string>
+    <string name="win_amount">You won:  %1$s Credits </string>
 
 </resources>

@@ -76,10 +76,10 @@ class BetBacklogFragment : Fragment() {
 
     private fun getBetlistFromDatabase(){
         val betLists = betListRepository.getAllBetLists() as ArrayList<BetList>
+        println(betLists[betLists.size - 1].isBetResolved)
         this@BetBacklogFragment.betLists.clear()
         this@BetBacklogFragment.betLists.addAll(betLists.filter { !it.isBetResolved })
         betlistScreenAdapter.notifyDataSetChanged()
-
     }
 
 
@@ -235,9 +235,10 @@ class BetBacklogFragment : Fragment() {
             }
 
             walletRepository.updateWallet(Wallet(walletRepository.getAllWallets()[0].credits + creditsWon, 1))
-
+            betList.isBetResolved = true
+            betListRepository.updateBetList(betList)
             tvCredits.text = walletRepository.getAllWallets()[0].credits.toString()
-             betList.isBetResolved = true
+
 
            // betListRepository.deleteBetList(betList)
             getBetlistFromDatabase()
