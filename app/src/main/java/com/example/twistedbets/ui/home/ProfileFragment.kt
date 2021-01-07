@@ -54,9 +54,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun onBetClick(betList: BetList) {
-
-        Snackbar.make(rvBets, "Checking if ${betList.summoner.name} has played a new game", Snackbar.LENGTH_INDEFINITE).show()
-
+        Snackbar.make(rvBets, getString(R.string.win_amount , betList.wonCredits.toString()), Snackbar.LENGTH_INDEFINITE).show()
     }
 
 

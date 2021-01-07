@@ -16,7 +16,6 @@
     <string name="confirming_bets_title">Confirming bets for : %1$s</string>
 
     <string name="new_balance_text">Your new balance will be: %.0f</string>
-
     <string name="check_bet_button">Check Bet</string>
     <string name="Retrieve_credits">Retrieve %.2f credits</string>
     <string name="ongoing_bets_title">Placed Bets</string>
@@ -24,5 +23,13 @@
     <string name="player_name">Niels van Oeffel</string>
     <string name="history">Bet History</string>
     <string name="win_amount">You won:  %1$s Credits </string>
+
+    <string name="checking_for_new_game">Checking if %1$s has played a new game</string>
+    <string name="checking_for_stats">Found a new game, Checking game stats for %1$s</string>
+    <string name="player_no_new_game">%1$s did not play another game</string>
+    <string name="lost_all_bets">You did not win any credits.</string>
+    <string name="added_to_wallet">Added %1$s credits to your wallet.</string>
+
+
 
 </resources>
